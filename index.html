@@ -1,48 +1,33 @@
-// 基于准备好的dom，初始化echarts实例
-				var mapBoxEchart = echarts.init(document.getElementById('content'));
+// 使用制定的配置项和数据显示图表
+						mapBoxEchart.setOption(mapBoxOption);
 
+					});
+			}
 
+			function setAllData(mapBoxEchart, link) {
+				$.get(link,
+					function(data, status) {
+						var now1 = 0;
+						var now2 = 0;
+						var now3 = 0;
+						var now4 = 0;
 
-				setData(mapBoxEchart, "now", "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+						for (var i = 0; i < data.newslist.length; i++) {
+							now1 += data.newslist[i].confirmedCount;
+							now2 += data.newslist[i].suspectedCount;
+							now3 += data.newslist[i].curedCount;
+							now4 += data.newslist[i].deadCount;
+						}
 
-				$(".nav li").click(function() {
-					var index = $(".nav li").index(this);
-					if (index == 0) {
-						setData(mapBoxEchart, "now",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-						$(".nav li").eq(0).addClass("select-nav");
-						$(".nav li").eq(1).removeClass("select-nav");
-					} else {
-						setData(mapBoxEchart, "all",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-						$(".nav li").eq(0).removeClass("select-nav");
-						$(".nav li").eq(1).addClass("select-nav");
-					}
-				});
+						var now = [now1, now2, now3, now4];
 
+						for (var i = 0; i < $(".data-board").length; i++) {
+							$(".data-board label").eq(i).html(now[i]);
+						}
 
-				// 获取累计数据
-				setTimeout(function(){
-					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");					
-				},3000);
+					});
+			}
+		</script>
 
-
-				$("#okDate").click(function() {
-					if ($("#date").val() == "") {
-						alert("请先选择日期");
-					} else {
-						setData(mapBoxEchart, "now",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
-						);
-						setAllData(mapBoxEchart,
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
-						);
-					}
-				});
-
-				$(".all").eq(0).click(function() {
-					setData(mapBoxEchart, "now",
-						"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-				});
-
+	</body>
+</html>
