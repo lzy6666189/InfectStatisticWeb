@@ -170,3 +170,41 @@
                     }
 
                 }, 3000);
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts
+                    .init(document.getElementsByClassName('content')[0]);
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '中国疫情',
+                        subtext: city
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['日期', '人数']
+                    },
+                    xAxis: {
+                        data: date
+                    },
+                    yAxis: {
+
+                    },
+                    series: [{
+                        name: '人数',
+                        type: 'line',
+                        smooth: true,
+                        data: datay,
+                        itemStyle: {
+                            normal: {
+                                color: '#FF5500'
+                            },
+                        }
+                    },],
+                    dataZoom: {
+                        realtime: true, //拖动滚动条时是否动态的更新图表数据
+                        height: 25, //滚动条高度
+                        start: 0, //滚动条开始位置（共100等份）
+                        end: 100
+                        //结束位置（共100等份）
+                    }
+                };
