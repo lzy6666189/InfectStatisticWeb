@@ -208,3 +208,16 @@
                         //结束位置（共100等份）
                     }
                 };
+                // 使用刚指定的配置项和数据显示图表。
+                setInterval(function () {
+                    myChart.setOption(option);
+                }, 3000);
+
+                //根据窗口的大小变动图表 --- 若有多个图表，可以写多个
+                window.onresize = function () {
+                    myChart.resize();
+                }
+
+                setAllData(myChart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f", city);
+
+            });
