@@ -1,73 +1,37 @@
-.all {
-			background-color: #6495ED;
-			color: white;
-			font-size: 0.875rem;
-			padding: 5px;
-			margin: 10px 20px;
-			border-radius: 5px;
-			text-align: center;
-			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-		}
+</style>
+	<body>
 
-		.data {
-			display: flex;
-			flex-wrap: wrap;
-			background-color: white;
-			margin: 0px 10px;
-			margin-top: 20px;
-			border-radius: 5px;
-			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-		}
+		<div class="date">
+			<input id="date" type="date" />
+			<div class="date-button" id="okDate">确定</div>
+		</div>
+		<div class="all">显示全部</div>
 
-		.data-board {
-			flex: 1;
-			width: 20%;
-			min-width: 20%;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			margin: 10px 0px;
-		}
+		<div class="data">
+			<div class="data-board">
+				<font>确诊</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>疑似</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>治愈</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>死亡</font>
+				<label>0</label>
+			</div>
+		</div>
 
-		.data-board font {
-			font-size: 0.875rem;
-			color: rgba(0, 0, 0, 0.7);
-		}
+		<ul class="nav">
+			<li class="select-nav">现有确诊</li>
+			<li>累计确诊</li>
+		</ul>
 
-		.data-board label {
-			font-size: 1rem;
-			font-weight: bold;
-		}
+		<div id="content" class="content"></div>
 
-		.data-board span {
-			font-size: 0.75rem;
-			color: rgba(0, 0, 0, 0.4);
-		}
-
-		.nav {
-			background-color: #E3E7EA;
-			display: flex;
-			margin: 20px 10px;
-			padding: 2px;
-			height: 30px;
-			line-height: 30px;
-			text-align: center;
-			border-radius: 5px;
-			overflow: hidden;
-		}
-
-		.nav li {
-			list-style: none;
-			flex: 1;
-			font-size: 0.875rem;
-		}
-
-		.select-nav {
-			background-color: white !important;
-			border-radius: 5px;
-		}
-
-		.content {
-			height: 400px;
-		}
+		<script type="text/javascript">
+			$(function() {
