@@ -1,4 +1,303 @@
-// ʹ���ƶ����������������ʾͼ��
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+		<title>疫情数据图</title>
+		<script src="js/jquery-2.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/china.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: "微软雅黑";
+		}
+
+		body {
+			background-color: #F8F8F8;
+			padding-bottom: 100px;
+		}
+
+		.date {
+			display: flex;
+			margin: 10px 20px 0px 20px;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+			background-color: white;
+			overflow: hidden;
+			border-radius: 5px;
+			justify-content: center;
+			align-items: center;
+		}
+
+		#date {
+			flex: 1;
+			color: rgba(0, 0, 0, 0.6);
+			border: none;
+			padding-left: 10px;
+			height: 30px;
+			outline: none;
+			background-color: white;
+		}
+
+		.date-button {
+			background-color: cornflowerblue;
+			color: white;
+			padding: 0px 10px;
+			font-size: 0.75rem;
+			line-height: 30px;
+			margin-left: 5px;
+		}
+
+		.all {
+			background-color: #6495ED;
+			color: white;
+			font-size: 0.875rem;
+			padding: 5px;
+			margin: 10px 20px;
+			border-radius: 5px;
+			text-align: center;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.data {
+			display: flex;
+			flex-wrap: wrap;
+			background-color: white;
+			margin: 0px 10px;
+			margin-top: 20px;
+			border-radius: 5px;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.data-board {
+			flex: 1;
+			width: 20%;
+			min-width: 20%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin: 10px 0px;
+		}
+
+		.data-board font {
+			font-size: 0.875rem;
+			color: rgba(0, 0, 0, 0.7);
+		}
+
+		.data-board label {
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		.data-board span {
+			font-size: 0.75rem;
+			color: rgba(0, 0, 0, 0.4);
+		}
+
+		.nav {
+			background-color: #E3E7EA;
+			display: flex;
+			margin: 20px 10px;
+			padding: 2px;
+			height: 30px;
+			line-height: 30px;
+			text-align: center;
+			border-radius: 5px;
+			overflow: hidden;
+		}
+
+		.nav li {
+			list-style: none;
+			flex: 1;
+			font-size: 0.875rem;
+		}
+
+		.select-nav {
+			background-color: white !important;
+			border-radius: 5px;
+		}
+
+		.content {
+			height: 400px;
+		}
+	</style>
+	<body>
+
+		<div class="date">
+			<input id="date" type="date" />
+			<div class="date-button" id="okDate">确定</div>
+		</div>
+		<div class="all">显示全部</div>
+
+		<div class="data">
+			<div class="data-board">
+				<font>确诊</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>疑似</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>治愈</font>
+				<label>0</label>
+			</div>
+			<div class="data-board">
+				<font>死亡</font>
+				<label>0</label>
+			</div>
+		</div>
+
+		<ul class="nav">
+			<li class="select-nav">现有确诊</li>
+			<li>累计确诊</li>
+		</ul>
+
+		<div id="content" class="content"></div>
+
+		<script type="text/javascript">
+			$(function() {
+
+
+				// 基于准备好的dom，初始化echarts实例
+				var mapBoxEchart = echarts.init(document.getElementById('content'));
+
+
+
+				setData(mapBoxEchart, "now", "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+
+				$(".nav li").click(function() {
+					var index = $(".nav li").index(this);
+					if (index == 0) {
+						setData(mapBoxEchart, "now",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+						$(".nav li").eq(0).addClass("select-nav");
+						$(".nav li").eq(1).removeClass("select-nav");
+					} else {
+						setData(mapBoxEchart, "all",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+						$(".nav li").eq(0).removeClass("select-nav");
+						$(".nav li").eq(1).addClass("select-nav");
+					}
+				});
+
+
+				// 获取累计数据
+				setTimeout(function(){
+					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");					
+				},3000);
+
+
+				$("#okDate").click(function() {
+					if ($("#date").val() == "") {
+						alert("请先选择日期");
+					} else {
+						setData(mapBoxEchart, "now",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
+						);
+						setAllData(mapBoxEchart,
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
+						);
+					}
+				});
+
+				$(".all").eq(0).click(function() {
+					setData(mapBoxEchart, "now",
+						"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+				});
+
+
+				// echart图表自适应
+				window.addEventListener("resize", function() {
+					mapBoxEchart.resize();
+				});
+
+				mapBoxEchart.on('click', function(params) {
+					window.open("city.html?city="+params.data.name,"_self");
+				});
+
+			});
+
+			function setData(mapBoxEchart, type, link) {
+				$.get(link,
+					function(data, status) {
+						console.log(data);
+						var map = "[";
+						for (var i = 0; i < data.newslist.length; i++) {
+							if (type == "now") {
+								if (i == data.newslist.length - 1) {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"}";
+								} else {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"},";
+								}
+							} else {
+								if (i == data.newslist.length - 1) {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"}";
+								} else {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].confirmedCount +
+										"},";
+								}
+							}
+						}
+						map += "]";
+						map = JSON.parse(map);
+
+
+						mapBoxOption = {
+							title: {
+								text: '中国疫情数据',
+								subtext: '疫情数据',
+							},
+							tooltip: {
+								trigger: 'item',
+								formatter: '{b}<br/>{c}人'
+							},
+							toolbox: {
+								show: true,
+								orient: 'vertical',
+								left: 'right',
+								top: 'center',
+								feature: {
+									dataView: {
+										readOnly: false
+									},
+									restore: {},
+									saveAsImage: {}
+								}
+							},
+							visualMap: {
+								min: 0,
+								max: 50,
+								text: ['High', 'Low'],
+								realtime: false,
+								calculable: true,
+								inRange: {
+									color: ['white', 'yellow', 'orangered']
+								}
+							},
+							series: [{
+								name: '中国疫情',
+								type: 'map',
+								mapType: 'china', // 自定义扩展图表类型
+								label: {
+									show: false
+								},
+								data: map,
+								// 自定义名称映射
+								nameMap: {
+
+								}
+							}]
+						};
+
+						// 使用制定的配置项和数据显示图表
 						mapBoxEchart.setOption(mapBoxOption);
 
 					});
