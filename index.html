@@ -1,37 +1,48 @@
-</style>
-	<body>
+// 基于准备好的dom，初始化echarts实例
+				var mapBoxEchart = echarts.init(document.getElementById('content'));
 
-		<div class="date">
-			<input id="date" type="date" />
-			<div class="date-button" id="okDate">确定</div>
-		</div>
-		<div class="all">显示全部</div>
 
-		<div class="data">
-			<div class="data-board">
-				<font>确诊</font>
-				<label>0</label>
-			</div>
-			<div class="data-board">
-				<font>疑似</font>
-				<label>0</label>
-			</div>
-			<div class="data-board">
-				<font>治愈</font>
-				<label>0</label>
-			</div>
-			<div class="data-board">
-				<font>死亡</font>
-				<label>0</label>
-			</div>
-		</div>
 
-		<ul class="nav">
-			<li class="select-nav">现有确诊</li>
-			<li>累计确诊</li>
-		</ul>
+				setData(mapBoxEchart, "now", "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
 
-		<div id="content" class="content"></div>
+				$(".nav li").click(function() {
+					var index = $(".nav li").index(this);
+					if (index == 0) {
+						setData(mapBoxEchart, "now",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+						$(".nav li").eq(0).addClass("select-nav");
+						$(".nav li").eq(1).removeClass("select-nav");
+					} else {
+						setData(mapBoxEchart, "all",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+						$(".nav li").eq(0).removeClass("select-nav");
+						$(".nav li").eq(1).addClass("select-nav");
+					}
+				});
 
-		<script type="text/javascript">
-			$(function() {
+
+				// 获取累计数据
+				setTimeout(function(){
+					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");					
+				},3000);
+
+
+				$("#okDate").click(function() {
+					if ($("#date").val() == "") {
+						alert("请先选择日期");
+					} else {
+						setData(mapBoxEchart, "now",
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
+						);
+						setAllData(mapBoxEchart,
+							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
+						);
+					}
+				});
+
+				$(".all").eq(0).click(function() {
+					setData(mapBoxEchart, "now",
+						"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
+				});
+
