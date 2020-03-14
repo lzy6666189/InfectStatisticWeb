@@ -1,48 +1,85 @@
-// 基于准备好的dom，初始化echarts实例
-				var mapBoxEchart = echarts.init(document.getElementById('content'));
-
-
-
-				setData(mapBoxEchart, "now", "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-
-				$(".nav li").click(function() {
-					var index = $(".nav li").index(this);
-					if (index == 0) {
-						setData(mapBoxEchart, "now",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-						$(".nav li").eq(0).addClass("select-nav");
-						$(".nav li").eq(1).removeClass("select-nav");
-					} else {
-						setData(mapBoxEchart, "all",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-						$(".nav li").eq(0).removeClass("select-nav");
-						$(".nav li").eq(1).addClass("select-nav");
-					}
+// echart图表自适应
+				window.addEventListener("resize", function() {
+					mapBoxEchart.resize();
 				});
 
-
-				// 获取累计数据
-				setTimeout(function(){
-					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");					
-				},3000);
-
-
-				$("#okDate").click(function() {
-					if ($("#date").val() == "") {
-						alert("请先选择日期");
-					} else {
-						setData(mapBoxEchart, "now",
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
-						);
-						setAllData(mapBoxEchart,
-							"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + $("#date").val()
-						);
-					}
+				mapBoxEchart.on('click', function(params) {
+					window.open("city.html?city="+params.data.name,"_self");
 				});
 
-				$(".all").eq(0).click(function() {
-					setData(mapBoxEchart, "now",
-						"http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-					setAllData(mapBoxEchart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f");
-				});
+			});
 
+			function setData(mapBoxEchart, type, link) {
+				$.get(link,
+					function(data, status) {
+						console.log(data);
+						var map = "[";
+						for (var i = 0; i < data.newslist.length; i++) {
+							if (type == "now") {
+								if (i == data.newslist.length - 1) {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"}";
+								} else {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"},";
+								}
+							} else {
+								if (i == data.newslist.length - 1) {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
+										"}";
+								} else {
+									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].confirmedCount +
+										"},";
+								}
+							}
+						}
+						map += "]";
+						map = JSON.parse(map);
+
+
+						mapBoxOption = {
+							title: {
+								text: '中国疫情数据',
+								subtext: '疫情数据',
+							},
+							tooltip: {
+								trigger: 'item',
+								formatter: '{b}<br/>{c}人'
+							},
+							toolbox: {
+								show: true,
+								orient: 'vertical',
+								left: 'right',
+								top: 'center',
+								feature: {
+									dataView: {
+										readOnly: false
+									},
+									restore: {},
+									saveAsImage: {}
+								}
+							},
+							visualMap: {
+								min: 0,
+								max: 50,
+								text: ['High', 'Low'],
+								realtime: false,
+								calculable: true,
+								inRange: {
+									color: ['white', 'yellow', 'orangered']
+								}
+							},
+							series: [{
+								name: '中国疫情',
+								type: 'map',
+								mapType: 'china', // 自定义扩展图表类型
+								label: {
+									show: false
+								},
+								data: map,
+								// 自定义名称映射
+								nameMap: {
+
+								}
+							}]
+						};
