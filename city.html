@@ -1,252 +1,296 @@
 ﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-		<title>疫情数据图</title>
-		<script src="js/jquery-2.0.0.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/echarts.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/china.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-    <style type="text/css">
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: "微软雅黑";
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>疫情数据图</title>
+    <script src="js/jquery-2.0.0.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/echarts.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/china.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: "微软雅黑";
+    }
+
+    body {
+        background-color: #F8F8F8;
+        padding-bottom: 100px;
+    }
+
+    .data {
+        display: flex;
+        flex-wrap: wrap;
+        background-color: white;
+        margin: 0px 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .data-board {
+        flex: 1;
+        width: 20%;
+        min-width: 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0px;
+    }
+
+        .data-board font {
+            font-size: 0.875rem;
+            color: rgba(0, 0, 0, 0.7);
         }
 
-        body {
-            background-color: #F8F8F8;
-            padding-bottom: 100px;
-        }
-
-        .data {
-            display: flex;
-            flex-wrap: wrap;
-            background-color: white;
-            margin: 0px 10px;
-            margin-top: 20px;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .data-board {
-            flex: 1;
-            width: 20%;
-            min-width: 20%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 10px 0px;
-        }
-
-            .data-board font {
-                font-size: 0.875rem;
-                color: rgba(0, 0, 0, 0.7);
-            }
-
-            .data-board label {
-                font-size: 1rem;
-                font-weight: bold;
-            }
-
-            .data-board span {
-                font-size: 0.75rem;
-                color: rgba(0, 0, 0, 0.4);
-            }
-
-        .nav {
-            background-color: #E3E7EA;
-            display: flex;
-            margin: 20px 10px;
-            padding: 2px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-            .nav li {
-                list-style: none;
-                flex: 1;
-                font-size: 0.875rem;
-            }
-
-        .select-nav {
-            background-color: white !important;
-            border-radius: 5px;
-        }
-
-        .content {
-            height: 400px;
-        }
-
-        #tip {
-            width: 180px;
-            height: 80px;
-            position: fixed;
-            top: calc(50% - 40px);
-            left: calc(50% - 90px);
-            text-align: center;
-            line-height: 80px;
-            color: white;
-            background-color: rgba(0,0,0,0.4);
+        .data-board label {
             font-size: 1rem;
-            border-radius: 10px;
-            z-index: 999;
+            font-weight: bold;
         }
-    </style>
-    <body>
 
-        <div class="data">
-            <div class="data-board">
-                <font>确诊</font>
-                <label>2290</label>
-            </div>
-            <div class="data-board">
-                <font>疑似</font>
-                <label>2290</label>
-            </div>
-            <div class="data-board">
-                <font>治愈</font>
-                <label>2290</label>
-            </div>
-            <div class="data-board">
-                <font>死亡</font>
-                <label>2290</label>
-            </div>
+        .data-board span {
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+    .nav {
+        background-color: #E3E7EA;
+        display: flex;
+        margin: 20px 10px;
+        padding: 2px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+        .nav li {
+            list-style: none;
+            flex: 1;
+            font-size: 0.875rem;
+        }
+
+    .select-nav {
+        background-color: white !important;
+        border-radius: 5px;
+    }
+
+    .content {
+        height: 400px;
+    }
+
+    #tip {
+        width: 180px;
+        height: 80px;
+        position: fixed;
+        top: calc(50% - 40px);
+        left: calc(50% - 90px);
+        text-align: center;
+        line-height: 80px;
+        color: white;
+        background-color: rgba(0,0,0,0.4);
+        font-size: 1rem;
+        border-radius: 10px;
+        z-index: 999;
+    }
+</style>
+<body>
+
+    <div class="data">
+        <div class="data-board">
+            <font>确诊</font>
+            <label>2290</label>
         </div>
-        <ul class="nav">
-            <li class="">确诊人数曲线</li>
-        </ul>
+        <div class="data-board">
+            <font>疑似</font>
+            <label>2290</label>
+        </div>
+        <div class="data-board">
+            <font>治愈</font>
+            <label>2290</label>
+        </div>
+        <div class="data-board">
+            <font>死亡</font>
+            <label>2290</label>
+        </div>
+    </div>
+    <ul class="nav">
+        <li class="">确诊人数曲线</li>
+    </ul>
 
-        <div id="tip">数据正在加载中...</div>
+    <div id="tip">数据正在加载中...</div>
 
-        <div id="content" class="content"></div>
+    <div id="content" class="content"></div>
 
-        <script type="text/javascript">
-            $(function () {
+    <script type="text/javascript">
+        $(function () {
 
-                var city = GetQueryString("city");
+            var city = GetQueryString("city");
 
-                var date = [];
+            var date = [];
 
-                var today = getToday();
+            var today = getToday();
 
-                for (var i = 0; i < 10; i++) {
-                    date.push(today);
-                    today = GetPrevDay(today);
-                }
+            for (var i = 0; i < 10; i++) {
+                date.push(today);
+                today = GetPrevDay(today);
+            }
 
-                //倒转后的新数组
-                date = $.map(date, function (v, i) { // map方法匿名函数传的值v是值、i是索引。
-                    return date[date.length - 1 - i];
-                });
+            //倒转后的新数组
+            date = $.map(date, function (v, i) { // map方法匿名函数传的值v是值、i是索引。
+                return date[date.length - 1 - i];
+            });
 
-                var datay = [];
+            var datay = [];
 
-                var count = 0;
+            var count = 0;
 
-                var getDateData = setInterval(function () {
-                    $.get("http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + date[count],
-                        function (data, status) {
-                            $("#tip").fadeOut(500);
-                            console.log(data)
-                            for (var j = 0; j < data.newslist.length; j++) {
-                                if (data.newslist[j].provinceShortName == city) {
-                                    datay.push(data.newslist[i].confirmedCount);
-                                }
+            var getDateData = setInterval(function () {
+                $.get("http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f&date=" + date[count],
+                    function (data, status) {
+                        $("#tip").fadeOut(500);
+                        console.log(data)
+                        for (var j = 0; j < data.newslist.length; j++) {
+                            if (data.newslist[j].provinceShortName == city) {
+                                datay.push(data.newslist[i].confirmedCount);
                             }
-                        });
-
-                    count++;
-
-                    if (count >= 10) {
-                        console.log(count);
-                        count = 0;
-                        clearInterval(getDateData);
-                    }
-
-                }, 3000);
-                // 基于准备好的dom，初始化echarts实例
-                var myChart = echarts
-                    .init(document.getElementsByClassName('content')[0]);
-                // 指定图表的配置项和数据
-                var option = {
-                    title: {
-                        text: '中国疫情',
-                        subtext: city
-                    },
-                    tooltip: {},
-                    legend: {
-                        data: ['日期', '人数']
-                    },
-                    xAxis: {
-                        data: date
-                    },
-                    yAxis: {
-
-                    },
-                    series: [{
-                        name: '人数',
-                        type: 'line',
-                        smooth: true,
-                        data: datay,
-                        itemStyle: {
-                            normal: {
-                                color: '#FF5500'
-                            },
                         }
-                    },],
-                    dataZoom: {
-                        realtime: true, //拖动滚动条时是否动态的更新图表数据
-                        height: 25, //滚动条高度
-                        start: 0, //滚动条开始位置（共100等份）
-                        end: 100
-                        //结束位置（共100等份）
+                    });
+
+                count++;
+
+                if (count >= 10) {
+                    console.log(count);
+                    count = 0;
+                    clearInterval(getDateData);
+                }
+
+            }, 3000);
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts
+                .init(document.getElementsByClassName('content')[0]);
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '中国疫情',
+                    subtext: city
+                },
+                tooltip: {},
+                legend: {
+                    data: ['日期', '人数']
+                },
+                xAxis: {
+                    data: date
+                },
+                yAxis: {
+
+                },
+                series: [{
+                    name: '人数',
+                    type: 'line',
+                    smooth: true,
+                    data: datay,
+                    itemStyle: {
+                        normal: {
+                            color: '#FF5500'
+                        },
                     }
-                };
-                // 使用刚指定的配置项和数据显示图表。
-                setInterval(function () {
-                    myChart.setOption(option);
-                }, 3000);
-
-                //根据窗口的大小变动图表 --- 若有多个图表，可以写多个
-                window.onresize = function () {
-                    myChart.resize();
+                },],
+                dataZoom: {
+                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                    height: 25, //滚动条高度
+                    start: 0, //滚动条开始位置（共100等份）
+                    end: 100
+                    //结束位置（共100等份）
                 }
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            setInterval(function () {
+                myChart.setOption(option);
+            }, 3000);
 
-                setAllData(myChart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f", city);
-
-    });
-            // 获取地址栏的get参数
-            //name是要查找的参数名
-            function GetQueryString(name) {
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-                var r = window.location.search.substr(1).match(reg);
-                if (r != null) return decodeURI(r[2]);
-                return null;
+            //根据窗口的大小变动图表 --- 若有多个图表，可以写多个
+            window.onresize = function () {
+                myChart.resize();
             }
 
-            //获取指定时间的前一天
-            function GetPrevDay(str) {
-                var year = str.substring(0, 4);
-                var month = str.substring(5, 7);
-                var day = str.substring(8, 10);
-                var today = new Date(year, month - 1, day);
-                var yesterday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24;
-                var yesterday = new Date();
-                yesterday.setTime(yesterday_milliseconds);
-                var strYear = yesterday.getFullYear();
-                var strDay = yesterday.getDate();
-                var strMonth = yesterday.getMonth() + 1;
-                if (strMonth < 10) {
-                    strMonth = "0" + strMonth;
-                }
-                if (strDay < 10) {
-                    strDay = "0" + strDay;
-                }
-                return strYear + "-" + strMonth + "-" + strDay;
+            setAllData(myChart, "http://api.tianapi.com/txapi/ncovcity/index?key=1b2371819b572b099150da823810349f", city);
+
+        });
+        // 获取地址栏的get参数
+        //name是要查找的参数名
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURI(r[2]);
+            return null;
+        }
+
+        //获取指定时间的前一天
+        function GetPrevDay(str) {
+            var year = str.substring(0, 4);
+            var month = str.substring(5, 7);
+            var day = str.substring(8, 10);
+            var today = new Date(year, month - 1, day);
+            var yesterday_milliseconds = today.getTime() - 1000 * 60 * 60 * 24;
+            var yesterday = new Date();
+            yesterday.setTime(yesterday_milliseconds);
+            var strYear = yesterday.getFullYear();
+            var strDay = yesterday.getDate();
+            var strMonth = yesterday.getMonth() + 1;
+            if (strMonth < 10) {
+                strMonth = "0" + strMonth;
             }
+            if (strDay < 10) {
+                strDay = "0" + strDay;
+            }
+            return strYear + "-" + strMonth + "-" + strDay;
+        }
+        // 获取今天
+        function getToday() {
+            var nowdate = new Date();
+            var y = nowdate.getFullYear();
+            var m = nowdate.getMonth() + 1;
+            var d = nowdate.getDate();
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (d < 10) {
+                d = "0" + d;
+            }
+            return y + '-' + m + '-' + d;
+        }
+
+        function setAllData(mapBoxEchart, link, city) {
+            $.get(link,
+                function (data, status) {
+                    var now1 = 0;
+                    var now2 = 0;
+                    var now3 = 0;
+                    var now4 = 0;
+
+                    for (var i = 0; i < data.newslist.length; i++) {
+                        if (data.newslist[i].provinceShortName == city) {
+                            now1 += data.newslist[i].confirmedCount;
+                            now2 += data.newslist[i].suspectedCount;
+                            now3 += data.newslist[i].curedCount;
+                            now4 += data.newslist[i].deadCount;
+                        }
+                    }
+
+                    var now = [now1, now2, now3, now4];
+
+                    for (var i = 0; i < $(".data-board").length; i++) {
+                        $(".data-board label").eq(i).html(now[i]);
+                    }
+
+                });
+        }
+    </script>
+
+</body>
+</html>
