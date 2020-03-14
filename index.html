@@ -1,85 +1,33 @@
-// echart图表自适应
-				window.addEventListener("resize", function() {
-					mapBoxEchart.resize();
-				});
+// 使用制定的配置项和数据显示图表
+						mapBoxEchart.setOption(mapBoxOption);
 
-				mapBoxEchart.on('click', function(params) {
-					window.open("city.html?city="+params.data.name,"_self");
-				});
+					});
+			}
 
-			});
-
-			function setData(mapBoxEchart, type, link) {
+			function setAllData(mapBoxEchart, link) {
 				$.get(link,
 					function(data, status) {
-						console.log(data);
-						var map = "[";
+						var now1 = 0;
+						var now2 = 0;
+						var now3 = 0;
+						var now4 = 0;
+
 						for (var i = 0; i < data.newslist.length; i++) {
-							if (type == "now") {
-								if (i == data.newslist.length - 1) {
-									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
-										"}";
-								} else {
-									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
-										"},";
-								}
-							} else {
-								if (i == data.newslist.length - 1) {
-									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].currentConfirmedCount +
-										"}";
-								} else {
-									map += "{\"name\":\"" + data.newslist[i].provinceShortName + "\",\"value\":" + data.newslist[i].confirmedCount +
-										"},";
-								}
-							}
+							now1 += data.newslist[i].confirmedCount;
+							now2 += data.newslist[i].suspectedCount;
+							now3 += data.newslist[i].curedCount;
+							now4 += data.newslist[i].deadCount;
 						}
-						map += "]";
-						map = JSON.parse(map);
 
+						var now = [now1, now2, now3, now4];
 
-						mapBoxOption = {
-							title: {
-								text: '中国疫情数据',
-								subtext: '疫情数据',
-							},
-							tooltip: {
-								trigger: 'item',
-								formatter: '{b}<br/>{c}人'
-							},
-							toolbox: {
-								show: true,
-								orient: 'vertical',
-								left: 'right',
-								top: 'center',
-								feature: {
-									dataView: {
-										readOnly: false
-									},
-									restore: {},
-									saveAsImage: {}
-								}
-							},
-							visualMap: {
-								min: 0,
-								max: 50,
-								text: ['High', 'Low'],
-								realtime: false,
-								calculable: true,
-								inRange: {
-									color: ['white', 'yellow', 'orangered']
-								}
-							},
-							series: [{
-								name: '中国疫情',
-								type: 'map',
-								mapType: 'china', // 自定义扩展图表类型
-								label: {
-									show: false
-								},
-								data: map,
-								// 自定义名称映射
-								nameMap: {
+						for (var i = 0; i < $(".data-board").length; i++) {
+							$(".data-board label").eq(i).html(now[i]);
+						}
 
-								}
-							}]
-						};
+					});
+			}
+		</script>
+
+	</body>
+</html>
